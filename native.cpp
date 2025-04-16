@@ -13,5 +13,13 @@ int main(int argc, char* argv[])
 {
   emp::Random random(2);
   OrgWorld world(random);
-
+  Organism* new_org = new Organism(&random);
+  world.Inject(*new_org);
+  world.Resize(10, 10);
+  std::cout << world.size() << std::endl;
+  std::cout << world.GetNumOrgs() << std::endl;
+  int number_of_generations = 20;
+  for (int i=0; i<number_of_generations; i++) {
+    world.Update();
+  }
 }

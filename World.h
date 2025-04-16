@@ -11,6 +11,7 @@ class OrgWorld : public emp::World<Organism> {
 
     emp::Random &random;
     emp::Ptr<emp::Random> random_ptr;
+    double points_per_update = 100;
 
     public:
 
@@ -23,7 +24,24 @@ class OrgWorld : public emp::World<Organism> {
 
   void Update() {
       emp::World<Organism>::Update();
-      std::cout << "Updating!" << std::endl; //feel free to get rid of this     
+      emp::vector<size_t> schedule = emp::GetPermutation(random, GetSize());
+      for (int i : schedule) {
+        if (!IsOccupied(i)) {
+            continue;
+        }
+        pop[i]->Process(points_per_update);
+      }
+      emp::vector<size_t> schedule_reproduction = emp::GetPermutation(random, GetSize());
+      for (int i : schedule) {
+        if (!IsOccupied(i)) {
+            continue;
+        }
+        emp::Ptr<Organism> offspring = pop[i]->CheckReproduction();
+        if (offspring) {
+            DoBirth(*offspring, i);
+        }
+      }
+      std::cout << "World contains " + std::to_string(GetNumOrgs()) << " organisms." << std::endl; //feel free to get rid of this
   }
 
 };

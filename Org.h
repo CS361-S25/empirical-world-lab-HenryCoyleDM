@@ -8,6 +8,7 @@ class Organism {
     private:
         double points;
         emp::Ptr<emp::Random> random;
+        double reproduction_cost = 1000;
 
     public:
     Organism(emp::Ptr<emp::Random> _random, double _points=0.0) :
@@ -17,9 +18,20 @@ class Organism {
     void AddPoints(double _in) {points += _in;}
 
 
-    void Process() {
+    void Process(double points) {
         std::cout << "Processing" << std::endl; //feel free to get rid of this
-       
+        AddPoints(points);
+    }
+
+    emp::Ptr<Organism> CheckReproduction() {
+        if (points >= reproduction_cost) {
+            emp::Ptr<Organism> offspring = new Organism(*this);
+            offspring->points = 0;
+            points -= reproduction_cost;
+            return offspring;
+        } else {
+            return nullptr;
+        }
     }
 };
 #endif

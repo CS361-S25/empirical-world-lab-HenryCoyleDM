@@ -14,6 +14,8 @@ class AEAnimator : public emp::web::Animate {
     const double RECT_SIDE = 10;
     const double width{num_w_boxes * RECT_SIDE};
     const double height{num_h_boxes * RECT_SIDE};
+    emp::Random random{5};
+    OrgWorld world{random};
 
     emp::web::Canvas canvas{width, height, "canvas"};
 
@@ -25,12 +27,28 @@ class AEAnimator : public emp::web::Animate {
         doc << canvas;
         doc << GetToggleButton("Toggle");
         doc << GetStepButton("Step");
-
+        Organism* new_org = new Organism(&random);
+        world.Inject(*new_org);
+        world.Resize(10, 10);
+        world.SetPopStruct_Grid(num_w_boxes, num_h_boxes);
+        std::cout << world.size() << std::endl;
+        std::cout << world.GetNumOrgs() << std::endl;
     }
 
     void DoFrame() override {
         canvas.Clear();
-
+        world.Update();
+        int org_num = 0;
+        for (int x = 0; x < num_w_boxes; x++){
+            for (int y = 0; y < num_h_boxes; y++) {
+                if (world.IsOccupied(org_num)) {
+                    canvas.Rect(x * RECT_SIDE, y * RECT_SIDE, RECT_SIDE, RECT_SIDE, "black", "black");
+                } else {
+                    canvas.Rect(x * RECT_SIDE, y * RECT_SIDE, RECT_SIDE, RECT_SIDE, "white", "black");
+                }
+                org_num++;
+            }
+        }
     }
 
 };
