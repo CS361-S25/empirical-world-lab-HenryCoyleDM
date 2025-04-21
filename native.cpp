@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
 {
   emp::Random random(2);
   OrgWorld world(random);
-  Organism* new_org = new Organism(&random);
+  Organism* new_org = new Organism(&random, 1000);
   world.Inject(*new_org);
   world.Resize(10, 10);
   std::cout << world.size() << std::endl;
